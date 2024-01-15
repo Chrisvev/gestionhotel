@@ -1,17 +1,21 @@
 package main;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Hotel {
-	
-	public static void main (String[]args) {
-		
-		System.out.println("Bienvenido a HOTELES VEEX");
-		System.out.println("¿Que desea?");
-		
-	}
-	
-	public void menuHotel() {
-		
-		
-	}
+
+    //Obtener reservas
+    public List<Reservas> obtenerReserva(Clientes cliente, Habitaciones habitacion, Date fechaInicio, Date fechaFin) {
+
+        return new ArrayList<>();
+    }
+
+    //Consultar la disponibilidad
+    public List<Clientes> obtenerCliente(Clientes cliente) {
+        
+        return new ArrayList<>();
+    }
 
 }
