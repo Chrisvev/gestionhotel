@@ -2,32 +2,27 @@ package main;
 
 import java.time.LocalDate;
 import java.util.Date;
-
 public class Reservas {
+    private static int contadorReservas = 1;
+    private int codigoReserva;
+    private Habitaciones habitacion;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+    private Clientes cliente;
 
-    public Reservas(Clientes cliente, Habitaciones habitacion, LocalDate fechaInicio, LocalDate fechaFin) {
-        this.cliente = cliente;
+    public Reservas(Habitaciones habitacion, LocalDate fechaInicio, LocalDate fechaFin, Clientes cliente) {
         this.habitacion = habitacion;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-
-    }
-
-
-    
-    //Constructor de la Clase Reserva, devuelve el cliente habitacion la fechainicio y la fechafin de la reserva
-    
-    public Reservas(){
-        
-    }
-
-    //Getters y Setters
-    public Clientes getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Clientes cliente) {
         this.cliente = cliente;
+
+
+        this.habitacion.setEstado("Ocupado");
+        this.codigoReserva = contadorReservas++;
+    }
+
+    public int getCodigoReserva() {
+        return codigoReserva;
     }
 
     public Habitaciones getHabitacion() {
@@ -53,20 +48,12 @@ public class Reservas {
     public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
     }
-        public String getCodigoReserva() {
-        return codigoReserva;
+
+    public Clientes getCliente() {
+        return cliente;
     }
 
-    public void setCodigoReserva(String codigoReserva) {
-        this.codigoReserva = codigoReserva;
+    public void setCliente(Clientes cliente) {
+        this.cliente = cliente;
     }
-
-
-    //Variables
-    private Clientes cliente;
-    private Habitaciones habitacion;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
-    private String codigoReserva;
-
 }
