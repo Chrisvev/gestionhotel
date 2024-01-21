@@ -1,49 +1,71 @@
 package casosdeuso;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import main.Clientes;
 import main.Habitaciones;
+
+import main.Hotel;
+
 import static main.Hotel.*;
 import main.Reservas;
 
 public class BookingService {
 
-    private List<Habitaciones> habitaciones;
-    static Scanner sc = new Scanner(System.in);
+    public BookingService(Hotel hotel) {
+        this.hotel = hotel;
+    }
 
-    public static void menu() {
-        int opcion = 0;
-       
-
-        opcion = sc.nextInt();
-        switch (opcion) {
-            case 1 : 
-
-            break;
-            case 2 : 
-
-            break;
-            default : {
-                System.out.println("Opcion no valida");
-                menu();
+    public void consultarDisponibilidad(LocalDate fechaInicio, LocalDate fechaFin, int personas) {
+        if (fechaInicio.isBefore(fechaFin)) {
+            if (personas < 1 || personas > 3) {
+                System.out.println("No hay habitaciones con esas caracteristicas");
+                
+            } else {
+            	ArrayList<Habitaciones> habi = filtroHabitaciones(hotel.listaHabitaciones);
+                for (Habitaciones h : habi) {
+                    if (h.getTipo().equals(obtenerCategoria(personas))) {
+                    	System.out.println("Habitación disponible - Categoría: " + h.getCategoria() + ", Tipo: "
+                                + h.getTipo() + ", Estado: " + h.getEstado());
+                    }
+                }
             }
+
+        } else {
+            System.out.println("La fecha de inicio no puede ser mayor a la fecha de fin");
         }
+
+    }
+    public ArrayList<Habitaciones> filtroHabitaciones(ArrayList<Habitaciones> habitaciones) {
+    	for(int i = 0 ;i<hotel.listaHabitaciones.size();i++) {
+    		for(Reservas r : hotel.listaReservas) {
+    			if(hotel.listaHabitaciones.get(i).equals(r.getHabitacion())) {
+    				habitaciones.remove(i);
+    			}
+
+    		}
+    		
+    	}
+    	return habitaciones;
     }
 
-    //Metodo para gestionar las reservas
-    public List<Habitaciones> consultarDisponibilidad(Date fechaInicio, Date fechaFin, int numPersonas) {
+    public String obtenerCategoria(int persona) {
 
-        return new ArrayList<>();
+        switch (persona) {
+            case 1:
+                return "INDIVIDUAL";
+            case 2:
+                return "DOBLE";
+            case 3:
+                return "TRIPLE";
+
+        }
+        return null;
     }
 
-    //Metodo para reservar habitaciones
-    public Reservas reservarHabitacion(Clientes cliente, Habitaciones habitacion, Date fechaInicio, Date fechaFin) {
+    private Hotel hotel;
 
-        //Una vez realizada la reserva se cambia la habitacion a ocupada
-        //habitacion.setEstado(Habitaciones.EstadoHabitacion.OCUPADO);
-        return new Reservas(cliente, habitacion, fechaInicio, fechaFin);
-    }
 }
