@@ -1,65 +1,47 @@
 package main;
 
 public class Habitaciones {
+    private int numPersonas;
+    private String categoria; 
+    private String tipo;
+    private String estado; 
 
-    public Habitaciones(int numCamas, EstadoHabitacion estado, categoriaHabitacion categoria) {
-        switch (categoria) {
-            case INDIVIDUAL:
-                this.precio = 100.00;
-                break;
-            case DOBLE :
-                this.precio = 200.00;
-                break;
-            case TRIPLE :
-                this.precio = 300.00;
-                break;
-        }
-    }
-    public Habitaciones() {
-    	
-    }
-    
-
-    public void setNumCamas(int num) {
-        this.numCamas = num;
+    public Habitaciones(int numPersonas, String categoria, String tipo) {
+        this.numPersonas = numPersonas;
+        this.categoria = categoria;
+        this.tipo = tipo;
+        this.estado = "Libre"; 
     }
 
-    public int getNumCamas() {
-        return numCamas;
+    public int getNumPersonas() {
+        return numPersonas;
     }
 
-    public categoriaHabitacion getCategoria() {
+    public void setNumPersonas(int numPersonas) {
+        this.numPersonas = numPersonas;
+    }
+
+    public String getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(categoriaHabitacion categoria) {
+    public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
 
-    public void setEstado(EstadoHabitacion nuevoEstado) {
-        this.estado = nuevoEstado;
+    public String getTipo() {
+        return tipo;
     }
 
-    public double getPrecio() {
-        return precio;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
-    //Enum que representa los posibles estado de la habitacion
-    public enum EstadoHabitacion {
-        LIBRE,
-        OCUPADO,
-        NO_DISPONIBLE
+    public String getEstado() {
+        return estado;
     }
 
-    public enum categoriaHabitacion {
-        INDIVIDUAL,
-        DOBLE,
-        TRIPLE
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
-
-    //Variables
-    int numCamas;
-    private EstadoHabitacion estado;
-    private categoriaHabitacion categoria;
-    private double precio;
 }
