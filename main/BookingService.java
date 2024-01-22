@@ -18,7 +18,7 @@ public class BookingService {
 				+ fechaFin + ":");
 
 		for (Habitaciones habitacion : hotel.getListaHabitaciones()) {
-			if (habitacion.getNumPersonas() >= numPersonas && verificarDisp(habitacion, fechaIni, fechaFin)
+			if (habitacion.getNumPersonas() >= numPersonas && verificarDisponibilidad(habitacion, fechaIni, fechaFin)
 					&& habitacion.getEstado().equals("Libre")) {
 				System.out.println("Habitación disponible - Categoría: " + habitacion.getCategoria() + ", Tipo: "
 						+ habitacion.getTipo() + ", Estado: " + habitacion.getEstado());
@@ -27,7 +27,7 @@ public class BookingService {
 	}
 
 
-	private boolean verificarDisp(Habitaciones habitacion, LocalDate fechaInicio, LocalDate fechaFin) {
+	private boolean verificarDisponibilidad(Habitaciones habitacion, LocalDate fechaInicio, LocalDate fechaFin) {
 		for (Reservas reserva : hotel.getListaReservas()) {
 			if (reserva.getHabitacion().equals(habitacion) && !fechaFin.isBefore(reserva.getFechaInicio())
 					&& !fechaInicio.isAfter(reserva.getFechaFin())) {
@@ -45,16 +45,16 @@ public class BookingService {
 			System.err.println("Cliente no existente");
 			registrarCliente();
 		}
-			Habitaciones habitacionDeseada = habDeseada(numPersonas, categoria, fechaIni, fechaFin);
+			Habitaciones habitacionDeseada = habitacionEscogida(numPersonas, categoria, fechaIni, fechaFin);
 
 			if (habitacionDeseada != null) {
-				double costo = calcularCostoAlojamiento();
+				double costo = calculoAlojamiento();
 
 				System.out.println("Costo: " + costo);
-				boolean confirmacion = confirmarReserva();
+				boolean confirmacion = confirmarReservaHotel();
 
 				if (confirmacion) {
-					Clientes c = obtenerCliente(dniCliente);
+					Clientes c = obtenerDatoCliente(dniCliente);
 					Reservas reserva = new Reservas(habitacionDeseada, fechaIni, fechaFin, c);
 					hotel.getListaReservas().add(reserva);
 					habitacionDeseada.setEstado("Reservado");
@@ -71,18 +71,9 @@ public class BookingService {
 	
 
 
-	public boolean validarCliente(String dni) {
+	
 
-		for (Clientes cliente : hotel.getListaClientes()) {
-			if (cliente.getDni().equals(dni)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private Clientes obtenerCliente(String dni) {
+	private Clientes obtenerDatoCliente(String dni) {
 
 		for (Clientes cliente : hotel.getListaClientes()) {
 			if (cliente.getDni().equals(dni)) {
@@ -109,10 +100,21 @@ public class BookingService {
 		}
 
 	}
+	
+	public boolean verificarCliente(String dni) {
 
-	private Habitaciones habDeseada(int numPersonas, String categoria, LocalDate fechaIni, LocalDate fechaFin) {
+		for (Clientes cliente : hotel.getListaClientes()) {
+			if (cliente.getDni().equals(dni)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private Habitaciones habitacionEscogida(int numPersonas, String categoria, LocalDate fechaIni, LocalDate fechaFin) {
 		for (Habitaciones habitacion : hotel.getListaHabitaciones()) {
-			if (habitacion.getNumPersonas() >= numPersonas && verificarDisp(habitacion, fechaIni, fechaFin)
+			if (habitacion.getNumPersonas() >= numPersonas && verificarDisponibilidad(habitacion, fechaIni, fechaFin)
 					&& habitacion.getCategoria().equals(categoria)) {
 				return habitacion;
 			}
@@ -120,11 +122,12 @@ public class BookingService {
 		return null;
 	}
 
-	public double calcularCostoAlojamiento() {
+	public double calculoAlojamiento() {
 		return (int) (Math.random() * 100) + 30;
 	}
 
-	public boolean confirmarReserva() {
+	
+	public boolean confirmarReservaHotel() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Realizar la reserva? (S/N)");
 		String respuesta = sc.nextLine();
