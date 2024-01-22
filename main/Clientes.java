@@ -5,7 +5,9 @@ public class Clientes {
 
     //Constructor de la clase
     public Clientes(String nombre, String apellidos, String dni) {
-
+    	this.nombre=nombre;
+    	this.apellidos=apellidos;
+    	this.dni=dni;
     }
     public Clientes() {
     	
