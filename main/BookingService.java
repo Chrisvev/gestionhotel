@@ -40,7 +40,7 @@ public class BookingService {
 
 	public void reservarHabitacion(LocalDate fechaIni, LocalDate fechaFin, int numPersonas, String categoria,
 			String dniCliente) {
-		boolean bandera = false;//validarCliente(dniCliente);
+		boolean bandera = verificarCliente(dniCliente);
 		if (bandera == false) {
 			System.err.println("Cliente no existente");
 			registrarCliente();
