@@ -1,47 +1,127 @@
 package main;
+import java.util.Set;
+
 
 public class Habitaciones {
-    private int numPersonas;
-    private String categoria; 
-    private String tipo;
-    private String estado; 
+	
+    private int numero;
+    private TipoCama numeroCamas;
+    private Categoria categoria;
+    private estadoHabitacion estado;
+    
+    
+    public enum estadoHabitacion {
+        LIBRE,
+        OCUPADO,
+        NO_DISPONIBLE
+    }
+    
+    
 
-    public Habitaciones(int numPersonas, String categoria, String tipo) {
-        this.numPersonas = numPersonas;
+	
+    public enum Categoria {
+    	
+        NORMAL(100.0, 50.0, 70.0, Set.of("Servicio adicional", "TV")),
+        BUSINESS(150.0, 80.0, 90.0, Set.of("Servicio adicional", "TV", "Desayuno")),
+        SUPERIOR(200.0, 100.0, 120.0, Set.of("Servicio adicional","TV","Piscina"));
+
+    	
+    	
+        private final double precioBase;
+        private final double precioServicios;
+        private final double precioMinibar;
+        private final Set<String> serviciosDisponibles;
+        
+       
+
+        Categoria(double precioBase, double precioServicios, double precioMinibar, Set<String> serviciosDisponibles) {
+            this.precioBase = precioBase;
+            this.precioServicios = precioServicios;
+            this.precioMinibar = precioMinibar;
+            this.serviciosDisponibles = serviciosDisponibles;
+        }
+        
+        
+
+        public double getPrecioBase() {
+            return precioBase;
+        }
+       
+
+        public double getPrecioServicios() {
+            return precioServicios;
+        }
+        
+       
+        public double getPrecioMinibar() {
+            return precioMinibar;
+        }
+        
+        
+
+        public double getPrecioTotal() {
+            return precioBase + precioServicios + precioMinibar;
+        }
+       
+        public Set<String> getServiciosDisponibles() {
+            return serviciosDisponibles;
+        }
+    }
+
+    
+    public enum TipoCama {
+        INDIVIDUAL,
+        DOBLE,
+        TRIPLE
+    }
+    
+    public Habitaciones() {}
+    
+    
+    public Habitaciones(int numero, TipoCama numeroCamas, Categoria categoria, estadoHabitacion estado) {
+        this.numero = numero;
+        this.numeroCamas = numeroCamas;
         this.categoria = categoria;
-        this.tipo = tipo;
-        this.estado = "Libre"; 
+        this.estado=estado;
+    }
+    
+
+
+    public estadoHabitacion getEstado() {
+		return estado;
+	}
+
+	public void setEstado(estadoHabitacion estado) {
+		this.estado = estado;
+	}
+
+    public int getNumero() {
+        return numero;
     }
 
-    public int getNumPersonas() {
-        return numPersonas;
+   
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
 
-    public void setNumPersonas(int numPersonas) {
-        this.numPersonas = numPersonas;
+   
+    public TipoCama getNumeroCamas() {
+        return numeroCamas;
     }
 
-    public String getCategoria() {
+    
+    public void setNumeroCamas(TipoCama numeroCamas) {
+        this.numeroCamas = numeroCamas;
+    }
+
+    
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+   
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
 }
