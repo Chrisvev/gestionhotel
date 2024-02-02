@@ -1,34 +1,44 @@
 package main;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
+
+import main.Clientes;
+import main.Habitaciones;
+import main.Reservas;
 
 public class Hotel {
 
-    //Obtener reservas
-    public ArrayList<Clientes> listaClientes = new ArrayList<>();
-     public ArrayList<Habitaciones> listaHabitaciones = new ArrayList<>();
-      public ArrayList<Reservas> listaReservas = new ArrayList<>();
-	public ArrayList<Clientes> getListaClientes() {
-		return listaClientes;
+	private ArrayList<Habitaciones> habitaciones;
+	private ArrayList<Reservas> reservas;
+	private ArrayList<Clientes> clientes;
+
+	public Hotel() {
+		this.habitaciones = new ArrayList<>();
+		this.reservas = new ArrayList<>();
+		this.clientes = new ArrayList<>();
 	}
-	public void setListaClientes(ArrayList<Clientes> listaClientes) {
-		this.listaClientes = listaClientes;
+
+	public void agregarReserva(Reservas reserva) {
+		reservas.add(reserva);
 	}
-	public ArrayList<Habitaciones> getListaHabitaciones() {
-		return listaHabitaciones;
-	}
-	public void setListaHabitaciones(ArrayList<Habitaciones> listaHabitaciones) {
-		this.listaHabitaciones = listaHabitaciones;
-	}
+
 	public ArrayList<Reservas> getListaReservas() {
-		return listaReservas;
-	}
-	public void setListaReservas(ArrayList<Reservas> listaReservas) {
-		this.listaReservas = listaReservas;
+		return reservas;
 	}
 
-      
+	public void agregarHabitacion(Habitaciones habitacion) {
+		habitaciones.add(habitacion);
+	}
+
+	public ArrayList<Habitaciones> getListaHabitaciones() {
+		return habitaciones;
+	}
+
+	public void registrarCliente(Clientes cliente) {
+		clientes.add(cliente);
+	}
+
+	public ArrayList<Clientes> getListaClientes() {
+		return clientes;
+	}
 }
-
