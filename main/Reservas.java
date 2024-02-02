@@ -1,43 +1,46 @@
 package main;
-
 import java.time.LocalDate;
-import java.util.Date;
+
+/**
+ * @author Chris
+ */
 public class Reservas {
-    private static int contadorReservas = 1;
-    private int codigoReserva;
     private Habitaciones habitacion;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
-    private Clientes cliente;
+    private String codigoReserva;
 
     
-    public Reservas(Habitaciones habitacion, LocalDate fechaInicio, LocalDate fechaFin, Clientes cliente) {
+
+    
+    public Reservas() {
+    	
+    }
+
+    
+    public Reservas(String codigoReserva, Habitaciones habitacion, LocalDate fechaInicio, LocalDate fechaFin) {
+        this.codigoReserva = codigoReserva;
         this.habitacion = habitacion;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.cliente = cliente;
-
-
-        this.habitacion.setEstado("Ocupado");
-        this.codigoReserva = contadorReservas++;
     }
 
-    public int getCodigoReserva() {
-        return codigoReserva;
-    }
-
+    
     public Habitaciones getHabitacion() {
         return habitacion;
     }
 
+   
     public void setHabitacion(Habitaciones habitacion) {
         this.habitacion = habitacion;
     }
 
+   
     public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
+    
     public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
@@ -46,15 +49,19 @@ public class Reservas {
         return fechaFin;
     }
 
+   
     public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
     }
-
-    public Clientes getCliente() {
-        return cliente;
+    
+    
+    public String getCodigoReserva() {
+        return codigoReserva;
     }
 
-    public void setCliente(Clientes cliente) {
-        this.cliente = cliente;
+    
+    public void setCodigoReserva(String codigoReserva) {
+        this.codigoReserva = codigoReserva;
     }
 }
+
