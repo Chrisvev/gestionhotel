@@ -4,11 +4,12 @@ package main;
 public class Clientes {
 
     //Constructor de la clase
-    public Clientes(String nombre, String apellidos, String dni) {
-    	this.nombre=nombre;
-    	this.apellidos=apellidos;
-    	this.dni=dni;
-    }
+	public Clientes(String nombre, String apellidos, String dni, int edad) {
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.dni = dni;
+		this.edad = edad;
+	}
     public Clientes() {
     	
     }
@@ -44,5 +45,12 @@ public class Clientes {
     private String nombre;
     private String apellidos;
     private String dni;
+    private int edad;
+	public int getEdad() {
+		return edad;
+	}
+	public void setEdad(int edad) {
+		this.edad = edad;
+	}
 
 }
