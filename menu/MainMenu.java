@@ -14,15 +14,11 @@ public class MainMenu {
 	Hotel hotel = new Hotel();
 	BookingService boo = new BookingService(hotel);
 
-	public static void main(String[] args) {
+	
 
-	}
+	
 
-	public MainMenu(Hotel hotel) {
-		this.hotel = hotel;
-	}
-
-	public void MenuApp() {
+	public void MenuApp(Hotel hotel) {
 
 		System.out.println("Bienvenido al hotel Factory");
 		System.out
@@ -36,16 +32,16 @@ public class MainMenu {
 			reservarHabitaciones();
 			break;
 		}
-
 	}
 
+	
 	public void consultarHabitaciones() {
-		LocalDate fechaInicio = boo.pedirFechaCliente("Introduzca la fecha de inicio en formato dd/mm/aaaa.");
-		LocalDate fechaFin = boo.pedirFechaCliente("Introduzca la fecha de fin en formato dd/mm/aaaa.");
+		LocalDate fechaInicio = boo.pedirFechaCliente("Introduzca la fecha de entrada dd/mm/aaaa.");
+		LocalDate fechaFin = boo.pedirFechaCliente("Introduzca la fecha de salida dd/mm/aaaa.");
 		while (fechaInicio.isAfter(fechaFin)) {
-			System.out.println("La fecha de fin no debe ser inferior a la fecha de inicio");
-			fechaInicio = boo.pedirFechaCliente("Introduzca la fecha de inicio en formato dd/mm/aaaa.");
-			fechaFin = boo.pedirFechaCliente("Introduzca la fecha de fin en formato dd/mm/aaaa.");
+			System.out.println("La fecha de salida no debe ser mas antigua a la fecha de entrada");
+			fechaInicio = boo.pedirFechaCliente("Introduzca la fecha de entrada dd/mm/aaaa.");
+			fechaFin = boo.pedirFechaCliente("Introduzca la fecha de salida dd/mm/aaaa.");
 		}
 		
 		cantidadPersonas = boo.pedirCantidadHuespedes();
@@ -67,7 +63,7 @@ public class MainMenu {
 		if (opcion == 1) {
 			reservarHabitaciones();
 		} else if (opcion == 2) {
-			MenuApp();
+			MenuApp(hotel);
 		} else {
 			System.out.println("Opcion no valida");
 			preguntaReserva();

@@ -32,7 +32,7 @@ public class BookingService {
 				if (fechaIntroducida.isEqual(fechaHoy) || fechaIntroducida.isAfter(fechaHoy)) {
 					return fechaIntroducida;
 				} else {
-					System.out.println("La fecha introducida debe ser igual o posterior a la fecha de hoy.");
+					System.out.println("La fecha debe ser igual o posterior a la fecha de hoy.");
 				}
 			} catch (Exception e) {
 				System.out.println("Formato de fecha incorrecto. Inténtalo de nuevo.");
@@ -52,20 +52,24 @@ public class BookingService {
 
 	public void consultarDisponibilidadHabitaciones(LocalDate fechaInicio, LocalDate fechaFin, int numeroPersonas) {
 		habitaciones = hotel.getListaHabitaciones();
-		normal = business = superior = 0;
+
 		filtrarFechasReserva(fechaInicio, fechaFin);
 		filtrarHabitacionPersonas(numeroPersonas);
 		encontrarTipoHabitacion();
-		System.out.println(
-				"Resultado de la consulta\n---------------------------------------------------------------------------");
-		if (normal + business + superior == 0) {
-			System.out.println("No hay habitaciones disponibles.");
-		}else {
-			System.out.printf(
-				    "%d habitaciones NORMAL (%d euros).\n%d habitaciones BUSINESS (%d euros).\n%d habitaciones SUPERIOR (%d euros).\n---------------------------------------------------------------------------\n",
-				    normal, (int)Categoria.NORMAL.getPrecioBase(), business, (int)Categoria.BUSINESS.getPrecioBase(), superior,
-				    (int)Categoria.SUPERIOR.getPrecioBase());
-		}
+		if (normal < 0)
+			normal = 0;
+		if (superior < 0)
+			superior = 0;
+		if (business < 0)
+			business = 0;
+		System.out.println("Resultado de la consulta");
+		System.out.println("---------------------------------------------------------------------------");
+
+		System.out.println(normal + " NORMAL (" + Categoria.NORMAL.getPrecioBase() + " €).");
+		System.out.println(business + " BUSINESS (" + Categoria.BUSINESS.getPrecioBase() + " €).");
+		System.out.println(superior + " SUPERIOR (" + Categoria.SUPERIOR.getPrecioBase() + " €).");
+		System.out.println("---------------------------------------------------------------------------");
+
 	}
 
 	private void filtrarFechasReserva(LocalDate fechaInicio, LocalDate fechaFin) {
@@ -117,19 +121,19 @@ public class BookingService {
 
 	public void reservarHabitacionCliente(int tipo, String dni, LocalDate fechaInicio, LocalDate fechaFin) {
 		if (tipo < 1 || tipo > 3) {
-			System.err.println("Introduce una opción válida.");
+			System.err.println("Opcion no valida");
 			return;
 		}
 		Habitaciones habitacion = obtenerHabitacion(tipo);
 		if (habitacion == null) {
-			System.out.println("No hay habitaciones de ese tipo disponibles.");
+			System.out.println("No hay habitaciones disponibles.");
 			return;
 		}
 		boolean bandera = verificarDNI(dni);
 		if (!bandera) {
 			solicitarDatos(dni);
 		}
-		System.out.println("Precio de alojamiento: " + habitacion.getCategoria().getPrecioTotal());
+		System.out.println("Precio de la habitacion: " + habitacion.getCategoria().getPrecioTotal());
 		char confirmar = confirmarReserva();
 
 		if (confirmar == 'Y' || confirmar == 'y') {
