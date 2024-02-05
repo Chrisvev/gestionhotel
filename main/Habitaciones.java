@@ -1,93 +1,67 @@
 package main;
+
 import java.util.Set;
 
-
 public class Habitaciones {
-	
-    private int numero;
-    private TipoCama numeroCamas;
-    private Categoria categoria;
-    private estadoHabitacion estado;
-    
-    
-    public enum estadoHabitacion {
-        LIBRE,
-        OCUPADO,
-        NO_DISPONIBLE
-    }
-    
-    
 
-	
-    public enum Categoria {
-    	
-        NORMAL(100.0, 50.0, 70.0, Set.of("Servicio adicional", "TV")),
-        BUSINESS(150.0, 80.0, 90.0, Set.of("Servicio adicional", "TV", "Desayuno")),
-        SUPERIOR(200.0, 100.0, 120.0, Set.of("Servicio adicional","TV","Piscina"));
+	public Habitaciones() {
+	}
 
-    	
-    	
-        private final double precioBase;
-        private final double precioServicios;
-        private final double precioMinibar;
-        private final Set<String> serviciosDisponibles;
-        
-       
+	public Habitaciones(int numero, TipoCama numeroCamas, Categoria categoria, estadoHabitacion estado) {
+		this.numero = numero;
+		this.numeroCamas = numeroCamas;
+		this.categoria = categoria;
+		this.estado = estado;
+	}
 
-        Categoria(double precioBase, double precioServicios, double precioMinibar, Set<String> serviciosDisponibles) {
-            this.precioBase = precioBase;
-            this.precioServicios = precioServicios;
-            this.precioMinibar = precioMinibar;
-            this.serviciosDisponibles = serviciosDisponibles;
-        }
-        
-        
+	public enum estadoHabitacion {
+		LIBRE, OCUPADO, NO_DISPONIBLE
+	}
 
-        public double getPrecioBase() {
-            return precioBase;
-        }
-       
+	public enum Categoria {
 
-        public double getPrecioServicios() {
-            return precioServicios;
-        }
-        
-       
-        public double getPrecioMinibar() {
-            return precioMinibar;
-        }
-        
-        
+		NORMAL(100.0, 50.0, 70.0, Set.of("Servicio adicional", "Television")),
+		BUSINESS(150.0, 80.0, 90.0, Set.of("Servicio adicional", "Television", "Desayuno")),
+		SUPERIOR(200.0, 100.0, 120.0, Set.of("Servicio adicional", "Television", "Piscina"));
 
-        public double getPrecioTotal() {
-            return precioBase + precioServicios + precioMinibar;
-        }
-       
-        public Set<String> getServiciosDisponibles() {
-            return serviciosDisponibles;
-        }
-    }
+		Categoria(double precioBase, double precioServicios, double precioMinibar, Set<String> serviciosDisponibles) {
+			this.precioBase = precioBase;
+			this.precioServicios = precioServicios;
+			this.precioMinibar = precioMinibar;
+			this.serviciosDisponibles = serviciosDisponibles;
+		}
 
-    
-    public enum TipoCama {
-        INDIVIDUAL,
-        DOBLE,
-        TRIPLE
-    }
-    
-    public Habitaciones() {}
-    
-    
-    public Habitaciones(int numero, TipoCama numeroCamas, Categoria categoria, estadoHabitacion estado) {
-        this.numero = numero;
-        this.numeroCamas = numeroCamas;
-        this.categoria = categoria;
-        this.estado=estado;
-    }
-    
+		public double getPrecioBase() {
+			return precioBase;
+		}
 
+		public double getPrecioServicios() {
+			return precioServicios;
+		}
 
-    public estadoHabitacion getEstado() {
+		public double getPrecioMinibar() {
+			return precioMinibar;
+		}
+
+		public double getPrecioTotal() {
+			return precioBase + precioServicios + precioMinibar;
+		}
+
+		public Set<String> getServiciosDisponibles() {
+			return serviciosDisponibles;
+		}
+
+		private final double precioBase;
+		private final double precioServicios;
+		private final double precioMinibar;
+		private final Set<String> serviciosDisponibles;
+	}
+
+	public enum TipoCama {
+		INDIVIDUAL, DOBLE, TRIPLE
+	}
+
+	public estadoHabitacion getEstado() {
 		return estado;
 	}
 
@@ -95,33 +69,33 @@ public class Habitaciones {
 		this.estado = estado;
 	}
 
-    public int getNumero() {
-        return numero;
-    }
+	public int getNumero() {
+		return numero;
+	}
 
-   
-    public void setNumero(int numero) {
-        this.numero = numero;
-    }
+	public void setNumero(int numero) {
+		this.numero = numero;
+	}
 
-   
-    public TipoCama getNumeroCamas() {
-        return numeroCamas;
-    }
+	public TipoCama getNumeroCamas() {
+		return numeroCamas;
+	}
 
-    
-    public void setNumeroCamas(TipoCama numeroCamas) {
-        this.numeroCamas = numeroCamas;
-    }
+	public void setNumeroCamas(TipoCama numeroCamas) {
+		this.numeroCamas = numeroCamas;
+	}
 
-    
-    public Categoria getCategoria() {
-        return categoria;
-    }
+	public Categoria getCategoria() {
+		return categoria;
+	}
 
-   
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
+
+	private int numero;
+	private TipoCama numeroCamas;
+	private Categoria categoria;
+	private estadoHabitacion estado;
 
 }

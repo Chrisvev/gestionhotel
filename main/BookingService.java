@@ -9,15 +9,17 @@ import main.Habitaciones.Categoria;
 
 public class BookingService {
 
-	private Hotel hotel = new Hotel();
+	private Hotel hotel;
 	private ArrayList<Habitaciones> habitaciones;
 	private int superior, normal, business;
 
 	public BookingService(Hotel hotel) {
 		this.hotel = hotel;
+		
 	}
 
 	public LocalDate pedirFechaCliente(String mensaje) {
+		
 		Scanner sc = new Scanner(System.in);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate fechaHoy = LocalDate.now();
@@ -41,6 +43,7 @@ public class BookingService {
 	}
 
 	public int pedirCantidadHuespedes() {
+		
 		Scanner sc = new Scanner(System.in);
 		int personas;
 		do {
@@ -48,29 +51,21 @@ public class BookingService {
 			personas = sc.nextInt();
 		} while (personas < 1 || personas > 3);
 		return personas;
+		
 	}
 
+	
 	public void consultarDisponibilidadHabitaciones(LocalDate fechaInicio, LocalDate fechaFin, int numeroPersonas) {
 		habitaciones = hotel.getListaHabitaciones();
-
 		filtrarFechasReserva(fechaInicio, fechaFin);
 		filtrarHabitacionPersonas(numeroPersonas);
 		encontrarTipoHabitacion();
-		if (normal < 0)
-			normal = 0;
-		if (superior < 0)
-			superior = 0;
-		if (business < 0)
-			business = 0;
-		System.out.println("Resultado de la consulta");
-		System.out.println("---------------------------------------------------------------------------");
-
+		
 		System.out.println(normal + " NORMAL (" + Categoria.NORMAL.getPrecioBase() + " €).");
 		System.out.println(business + " BUSINESS (" + Categoria.BUSINESS.getPrecioBase() + " €).");
 		System.out.println(superior + " SUPERIOR (" + Categoria.SUPERIOR.getPrecioBase() + " €).");
-		System.out.println("---------------------------------------------------------------------------");
-
 	}
+	
 
 	private void filtrarFechasReserva(LocalDate fechaInicio, LocalDate fechaFin) {
 		for (int i = habitaciones.size() - 1; i >= 0; i--) {
@@ -88,12 +83,14 @@ public class BookingService {
 		}
 	}
 
+	
 	private void filtrarHabitacionPersonas(int personasCantidad) {
 		for (int i = habitaciones.size() - 1; i >= 0; i--) {
 			Habitaciones habitacion = habitaciones.get(i);
 			if (personasCantidad == 2) {
 				if (habitacion.getNumeroCamas().equals(TipoCama.INDIVIDUAL))
 					habitaciones.remove(i);
+				
 			}
 			if (personasCantidad == 3) {
 				if (habitacion.getNumeroCamas().equals(TipoCama.INDIVIDUAL)
@@ -102,6 +99,7 @@ public class BookingService {
 			}
 		}
 	}
+	
 
 	private void encontrarTipoHabitacion() {
 		for (Habitaciones habi : habitaciones) {
@@ -184,7 +182,7 @@ public class BookingService {
 	private void solicitarDatos(String dni) {
 		Scanner sc = new Scanner(System.in);
 		String nombre = "", apellidos = "";
-		int edad = -1;
+		int edad = 0;
 		do {
 			System.out.println("Nombre: ");
 			nombre = sc.nextLine();
