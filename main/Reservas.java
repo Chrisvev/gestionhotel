@@ -1,15 +1,13 @@
 package main;
 import java.time.LocalDate;
+import javax.persistence.*;
 
 /**
  * @author Chris
  */
+@Entity
+@Table (name="reservas")
 public class Reservas {
-    private Habitaciones habitacion;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
-    private String codigoReserva;
-
     
 
     
@@ -18,11 +16,12 @@ public class Reservas {
     }
 
     
-    public Reservas(String codigoReserva, Habitaciones habitacion, LocalDate fechaInicio, LocalDate fechaFin) {
+    public Reservas(String codigoReserva, Habitaciones habitacion, LocalDate fechaInicio, LocalDate fechaFin, Clientes cliente) {
         this.codigoReserva = codigoReserva;
         this.habitacion = habitacion;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+        this.cliente=cliente;
     }
 
     
@@ -59,9 +58,33 @@ public class Reservas {
         return codigoReserva;
     }
 
-    
-    public void setCodigoReserva(String codigoReserva) {
+	public void setCodigoReserva(String codigoReserva) {
         this.codigoReserva = codigoReserva;
     }
+    public Clientes getCliente() {
+		return cliente;
+	}
+
+
+	public void setCliente(Clientes cliente) {
+		this.cliente = cliente;
+	}
+    
+	@OneToOne(fetch = FetchType.LAZY)
+    private Clientes cliente;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+    private Habitaciones habitacion;
+	
+	
+	@Column(length = 250)
+    @Id
+    private String codigoReserva;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+    
+	
+	
+
 }
 

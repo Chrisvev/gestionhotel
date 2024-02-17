@@ -1,7 +1,10 @@
 package main;
 
 import java.util.Set;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "Habitaciones")
 public class Habitaciones {
 
 	public Habitaciones() {
@@ -92,10 +95,39 @@ public class Habitaciones {
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	private Clientes cliente;
+	
+	
+	public Clientes getCliente() {
+		return cliente;
+	}
 
+	public void setCliente(Clientes cliente) {
+		this.cliente = cliente;
+	}
+
+	public int getId() {
+		return id;
+	}
+	
+
+	//No tengo id y hago que al crear la habitacion te genere una id
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int numero;
+	
+	 @Enumerated(EnumType.STRING)
 	private TipoCama numeroCamas;
+	 
+	 @Enumerated(EnumType.STRING)
 	private Categoria categoria;
+	 
+	 @Enumerated(EnumType.STRING)
 	private estadoHabitacion estado;
+	 
+	 
+	private int id;
 
 }

@@ -7,38 +7,38 @@ import main.Habitaciones;
 import main.Reservas;
 
 public class Hotel {
+	
+	public static ClientesDAOImpl cdao = new ClientesDAOImpl();
+	public static HabitacionesDAOImpl hdao = new HabitacionesDAOImpl();
+	public static ReservasDAOImpl rdao = new ReservasDAOImpl();
 
-	private ArrayList<Habitaciones> habitaciones;
-	private ArrayList<Reservas> reservas;
-	private ArrayList<Clientes> clientes;
+	
 
 	public Hotel() {
-		this.habitaciones = new ArrayList<>();
-		this.reservas = new ArrayList<>();
-		this.clientes = new ArrayList<>();
+		
 	}
 
 	public void agregarReserva(Reservas reserva) {
-		reservas.add(reserva);
+		rdao.guardar(reserva);
 	}
 
 	public ArrayList<Reservas> getListaReservas() {
-		return reservas;
+		return (ArrayList<Reservas>) rdao.obtenerTodo();
 	}
 
 	public void agregarHabitacion(Habitaciones habitacion) {
-		habitaciones.add(habitacion);
+		hdao.guardar(habitacion);
 	}
 
 	public ArrayList<Habitaciones> getListaHabitaciones() {
-		return habitaciones;
+		return (ArrayList<Habitaciones>) hdao.obtenerTodo();
 	}
 
 	public void registrarCliente(Clientes cliente) {
-		clientes.add(cliente);
+		cdao.guardar(cliente);
 	}
 
 	public ArrayList<Clientes> getListaClientes() {
-		return clientes;
+		return (ArrayList<Clientes>) cdao.obtenerTodo();
 	}
 }

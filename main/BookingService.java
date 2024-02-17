@@ -2,24 +2,33 @@ package main;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.UUID;
+
 import main.Habitaciones.TipoCama;
+import main.Habitaciones.estadoHabitacion;
 import main.Habitaciones.Categoria;
 
 public class BookingService {
 
+	private Scanner sc = new Scanner(System.in);
 	private Hotel hotel;
 	private ArrayList<Habitaciones> habitaciones;
+	private ArrayList<Clientes> clientes;
+	private ArrayList<Reservas> reservas;
 	private int superior, normal, business;
 
 	public BookingService(Hotel hotel) {
 		this.hotel = hotel;
-		
+		habitaciones = hotel.getListaHabitaciones();
+		reservas = hotel.getListaReservas();
+		clientes = hotel.getListaClientes();
 	}
 
 	public LocalDate pedirFechaCliente(String mensaje) {
-		
+
 		Scanner sc = new Scanner(System.in);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate fechaHoy = LocalDate.now();
@@ -43,7 +52,7 @@ public class BookingService {
 	}
 
 	public int pedirCantidadHuespedes() {
-		
+
 		Scanner sc = new Scanner(System.in);
 		int personas;
 		do {
@@ -51,31 +60,38 @@ public class BookingService {
 			personas = sc.nextInt();
 		} while (personas < 1 || personas > 3);
 		return personas;
-		
+
 	}
 
-	
 	public void consultarDisponibilidadHabitaciones(LocalDate fechaInicio, LocalDate fechaFin, int numeroPersonas) {
-		habitaciones = hotel.getListaHabitaciones();
-		filtrarFechasReserva(fechaInicio, fechaFin);
+		localizarTipoHabitacion();
+		filtroFechasReserva(fechaInicio, fechaFin);
 		filtrarHabitacionPersonas(numeroPersonas);
-		encontrarTipoHabitacion();
-		
+		filtrarEstadoHabitacion();
+
 		System.out.println(normal + " NORMAL (" + Categoria.NORMAL.getPrecioBase() + " €).");
 		System.out.println(business + " BUSINESS (" + Categoria.BUSINESS.getPrecioBase() + " €).");
 		System.out.println(superior + " SUPERIOR (" + Categoria.SUPERIOR.getPrecioBase() + " €).");
 	}
-	
 
-	private void filtrarFechasReserva(LocalDate fechaInicio, LocalDate fechaFin) {
-		for (int i = habitaciones.size() - 1; i >= 0; i--) {
-			Habitaciones habitacion = habitaciones.get(i);
-			for (Reservas reserva : hotel.getListaReservas()) {
-				if (reserva.getHabitacion() != null && reserva.getHabitacion().equals(habitacion)) {
-					if ((reserva.getFechaInicio().isEqual(fechaInicio) && reserva.getFechaFin().isEqual(fechaFin))
-							|| (fechaInicio.isAfter(reserva.getFechaInicio())
-									&& fechaFin.isBefore(reserva.getFechaFin()))) {
-						habitaciones.remove(i);
+	private void filtroFechasReserva(LocalDate fechaInicio, LocalDate fechaFin) {
+		for (Reservas reserva : hotel.getListaReservas()) {
+			LocalDate reservaInicio = reserva.getFechaInicio();
+			LocalDate reservaFin = reserva.getFechaFin();
+
+			if ((fechaInicio.isBefore(reservaFin) || fechaInicio.isEqual(reservaFin))
+					&& (fechaFin.isAfter(reservaInicio) || fechaFin.isEqual(reservaInicio))) {
+				Habitaciones habitacionReservada = reserva.getHabitacion();
+				if (habitacionReservada != null) {
+					switch (habitacionReservada.getCategoria()) {
+					case NORMAL:
+						normal--;
+						break;
+					case BUSINESS:
+						business--;
+						break;
+					case SUPERIOR:
+						superior--;
 						break;
 					}
 				}
@@ -83,25 +99,7 @@ public class BookingService {
 		}
 	}
 
-	
-	private void filtrarHabitacionPersonas(int personasCantidad) {
-		for (int i = habitaciones.size() - 1; i >= 0; i--) {
-			Habitaciones habitacion = habitaciones.get(i);
-			if (personasCantidad == 2) {
-				if (habitacion.getNumeroCamas().equals(TipoCama.INDIVIDUAL))
-					habitaciones.remove(i);
-				
-			}
-			if (personasCantidad == 3) {
-				if (habitacion.getNumeroCamas().equals(TipoCama.INDIVIDUAL)
-						|| habitacion.getNumeroCamas().equals(TipoCama.DOBLE))
-					habitaciones.remove(i);
-			}
-		}
-	}
-	
-
-	private void encontrarTipoHabitacion() {
+	private void localizarTipoHabitacion() {
 		for (Habitaciones habi : habitaciones) {
 			switch (habi.getCategoria()) {
 			case NORMAL:
@@ -112,6 +110,64 @@ public class BookingService {
 				break;
 			case SUPERIOR:
 				superior++;
+				break;
+			}
+		}
+	}
+
+	private void filtrarHabitacionPersonas(int personasCantidad) {
+		for (Habitaciones habitacion : habitaciones) {
+			if (personasCantidad == 2 && habitacion.getNumeroCamas().equals(TipoCama.INDIVIDUAL)) {
+				switch (habitacion.getCategoria()) {
+				case NORMAL:
+					normal--;
+					break;
+				case BUSINESS:
+					business--;
+					break;
+				case SUPERIOR:
+					superior--;
+					break;
+				}
+			} else if (personasCantidad == 3 && (habitacion.getNumeroCamas().equals(TipoCama.INDIVIDUAL)
+					|| habitacion.getNumeroCamas().equals(TipoCama.DOBLE))) {
+				switch (habitacion.getCategoria()) {
+				case NORMAL:
+					normal--;
+					break;
+				case BUSINESS:
+					business--;
+					break;
+				case SUPERIOR:
+					superior--;
+					break;
+				}
+			}
+		}
+	}
+
+	private void filtrarEstadoHabitacion() {
+		for (Habitaciones habi : hotel.hdao.obtenerTodo()) {
+			switch (habi.getCategoria()) {
+			case NORMAL:
+				if (habi.getEstado().equals(estadoHabitacion.OCUPADO)
+						|| habi.getEstado().equals(estadoHabitacion.NO_DISPONIBLE)) {
+					normal--;
+				}
+				break;
+			case BUSINESS:
+				if (habi.getEstado().equals(estadoHabitacion.OCUPADO)
+						|| habi.getEstado().equals(estadoHabitacion.NO_DISPONIBLE)) {
+					business--;
+				}
+
+				break;
+			case SUPERIOR:
+
+				if (habi.getEstado().equals(estadoHabitacion.OCUPADO)
+						|| habi.getEstado().equals(estadoHabitacion.NO_DISPONIBLE)) {
+					superior--;
+				}
 				break;
 			}
 		}
@@ -131,19 +187,53 @@ public class BookingService {
 		if (!bandera) {
 			solicitarDatos(dni);
 		}
+		Clientes cliente = new Clientes();
+		for (Clientes c : hotel.cdao.obtenerTodo()) {
+			if (c.getDni().equals(dni)) {
+				cliente = c;
+			}
+		}
 		System.out.println("Precio de la habitacion: " + habitacion.getCategoria().getPrecioTotal());
 		char confirmar = confirmarReserva();
 
 		if (confirmar == 'Y' || confirmar == 'y') {
 			System.out.println("Reserva realizada");
-			Reservas r = new Reservas(generarCodigoReserva(dni), habitacion, fechaInicio, fechaFin);
+			Reservas r = new Reservas(generarCodigoReserva(), null, fechaInicio, fechaFin, cliente);
 			System.out.println("Código de reserva: " + r.getCodigoReserva());
-			hotel.getListaReservas().add(r);
+			hotel.agregarReserva(r);
+			habitacion.setCliente(cliente);
+			hotel.hdao.modificar(habitacion);
 		}
 	}
 
-	private String generarCodigoReserva(String dni) {
-		return dni + "-768754";
+	// Generardos de codigos de barras (Gracias Chat)
+	private String generarCodigoReserva() {
+		UUID uuid = UUID.randomUUID();
+		String codigo = uuid.toString().toUpperCase().replaceAll("-", "");
+		StringBuilder sb = new StringBuilder();
+		int len = codigo.length();
+		for (int i = 0; i < len; i++) {
+			sb.append(codigo.charAt(i));
+			if ((i + 1) % 6 == 0 && i != len - 1) {
+				sb.append("-");
+			}
+		}
+		return sb.toString();
+	}
+
+	public String obtenerCodigoReserva() {
+		boolean bandera = false;
+		String codigo = "";
+		do {
+			System.out.println("Introduce el codigo de la reserva");
+			codigo = sc.nextLine();
+			for (Reservas r : hotel.rdao.obtenerTodo()) {
+				if (r.getCodigoReserva().equals(codigo)) {
+					bandera = true;
+				}
+			}
+		} while (!bandera);
+		return codigo;
 	}
 
 	private char confirmarReserva() {
@@ -201,7 +291,7 @@ public class BookingService {
 			if (edad < 18)
 				System.err.println("No es mayor de edad");
 		} while (edad < 18);
-		hotel.getListaClientes().add(new Clientes(nombre, apellidos, dni, edad));
+		hotel.registrarCliente(new Clientes(nombre, apellidos, dni, edad));
 	}
 
 	private boolean verificarDNI(String dni) {
@@ -268,5 +358,83 @@ public class BookingService {
 			}
 		} while (bandera == false);
 		return opcion;
+	}
+
+	public void checkIn(String codigo) {
+		boolean bandera = false;
+		for (Reservas r : hotel.rdao.obtenerTodo()) {
+			if (r.getCodigoReserva().equals(codigo)) {
+				if (r.getFechaInicio().isAfter(LocalDate.now())) {
+					System.err.println("No puedes hacer el checkIn todavia");
+				} else {
+					bandera = true;
+				}
+			}
+		}
+		if (bandera) {
+			for (Reservas r : hotel.rdao.obtenerTodo()) {
+				if (r.getCodigoReserva().equals(codigo)) {
+					for (Habitaciones h : hotel.hdao.obtenerTodo()) {
+						if (h.getCliente() != null && h.getCliente().getDni().equals(r.getCliente().getDni())) {
+							h.setEstado(estadoHabitacion.OCUPADO);
+							r.setHabitacion(h);
+							hotel.hdao.modificar(h);
+							hotel.rdao.modificar(r);
+							System.out.println("Estancia confirmada");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void checkOut(String dni) {
+		boolean bandera = false;
+		for (Reservas r : hotel.rdao.obtenerTodo()) {
+			if (r.getCliente().getDni().equals(dni)) {
+				bandera = true;
+			}
+		}
+
+		if (bandera) {
+			for (Reservas r : hotel.rdao.obtenerTodo()) {
+				if (r.getCliente().getDni().equals(dni)) {
+					for (Habitaciones h : hotel.hdao.obtenerTodo()) {
+						if (h.getCliente() != null && h.getCliente().getDni().equals(r.getCliente().getDni())) {
+							h.setEstado(estadoHabitacion.LIBRE);
+							h.setCliente(null);
+							hotel.hdao.modificar(h);
+							long dias = ChronoUnit.DAYS.between(r.getFechaInicio(), r.getFechaFin());
+							hotel.rdao.eliminar(r);
+
+							System.out.println("CheckOut realizado, coste total de: "
+									+ (dias * h.getCategoria().getPrecioTotal()));
+						}
+					}
+				}
+			}
+		} else {
+			System.out.println("No se ha encontrado ningun Dni asocidado");
+		}
+	}
+
+	public void cancelarReserva(String codigo) {
+
+		for (Reservas r : hotel.rdao.obtenerTodo()) {
+			if (r.getCodigoReserva().equals(codigo)) {
+				if (r.getHabitacion() == null) {
+					for (Habitaciones h : hotel.hdao.obtenerTodo()) {
+						if (r.getCliente().equals(h.getCliente())) {
+							h.setCliente(null);
+							hotel.hdao.modificar(h);
+						}
+					}
+					hotel.rdao.eliminar(r);
+					System.out.println("Reserva cancelada xD");
+				}
+			}
+		}
+
+
 	}
 }

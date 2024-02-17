@@ -1,6 +1,8 @@
 package main;
+import javax.persistence.*;
 
-
+@Entity
+@Table (name = "clientes")
 public class Clientes {
 
     //Constructor de la clase
@@ -10,10 +12,10 @@ public class Clientes {
 		this.dni = dni;
 		this.edad = edad;
 	}
+	
     public Clientes() {
     	
     }
-    
     
     //Getters y Setters
 
@@ -41,16 +43,22 @@ public class Clientes {
         this.dni = dni;
     }
 
-    //Variables
-    private String nombre;
-    private String apellidos;
-    private String dni;
-    private int edad;
+    
 	public int getEdad() {
 		return edad;
 	}
 	public void setEdad(int edad) {
 		this.edad = edad;
 	}
+	
+	
+	
+	//Variables
+    @Column(length = 50)
+    @Id
+    private String dni;
+    private String nombre;
+    private String apellidos;
+    private int edad;
 
 }

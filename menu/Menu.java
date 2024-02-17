@@ -15,25 +15,28 @@ import main.Hotel;
 public class Menu {
 	static Scanner sc = new Scanner(System.in);
 
+	boolean bandera = true;
+
 	private BookingService boo;
 	Hotel h;
 
 	public Menu() {
+		
 		Habitaciones habitacion1 = new Habitaciones(1, TipoCama.INDIVIDUAL, Categoria.NORMAL, estadoHabitacion.LIBRE);
-		Habitaciones habitacion2 = new Habitaciones(1, TipoCama.INDIVIDUAL, Categoria.NORMAL, estadoHabitacion.LIBRE);
+		Habitaciones habitacion2 = new Habitaciones(2, TipoCama.INDIVIDUAL, Categoria.NORMAL, estadoHabitacion.LIBRE);
 
-		Habitaciones habitacion3 = new Habitaciones(2, TipoCama.DOBLE, Categoria.BUSINESS, estadoHabitacion.LIBRE);
-		Habitaciones habitacion4 = new Habitaciones(2, TipoCama.DOBLE, Categoria.BUSINESS, estadoHabitacion.LIBRE);
+		Habitaciones habitacion3 = new Habitaciones(3, TipoCama.DOBLE, Categoria.BUSINESS, estadoHabitacion.LIBRE);
+		Habitaciones habitacion4 = new Habitaciones(4, TipoCama.DOBLE, Categoria.BUSINESS, estadoHabitacion.LIBRE);
 
-		Habitaciones habitacion5 = new Habitaciones(3, TipoCama.TRIPLE, Categoria.SUPERIOR, estadoHabitacion.LIBRE);
-		Habitaciones habitacion6 = new Habitaciones(3, TipoCama.TRIPLE, Categoria.SUPERIOR, estadoHabitacion.LIBRE);
+		Habitaciones habitacion5 = new Habitaciones(5, TipoCama.TRIPLE, Categoria.SUPERIOR, estadoHabitacion.LIBRE);
+		Habitaciones habitacion6 = new Habitaciones(6, TipoCama.TRIPLE, Categoria.SUPERIOR, estadoHabitacion.LIBRE);
+		
+		
 
-		Clientes cliente1 = new Clientes("Alfonso", "Perez", "854856387G", 56);
-		Clientes cliente2 = new Clientes("Pedro", "dede", "736458376H", 89);
 		h = new Hotel();
-
-		h.registrarCliente(cliente1);
-		h.registrarCliente(cliente2);
+		h.rdao.eliminarDatos();
+		h.cdao.eliminarDatos();
+		h.hdao.eliminarDatos();
 		h.agregarHabitacion(habitacion1);
 		h.agregarHabitacion(habitacion2);
 		h.agregarHabitacion(habitacion3);
@@ -45,19 +48,37 @@ public class Menu {
 	}
 
 	public void MenuApp() {
+		while (bandera) {
+			System.out.println("Hotel Factory");
+			System.out.println(
+					"Que operacion desea realizar\n1. Consultar disponibilidad y Reservar habitacion\n2. CheckIn\n3. CheckOut\n4. Cancelar reserva\n5. Salir ");
+			System.out.println("-----------------------");
+			int opcion = sc.nextInt();
+			switch (opcion) {
+			case 1:
+				consultarHabitaciones();
+				break;
+			case 2:
+				String codigo = boo.obtenerCodigoReserva();
+				boo.checkIn(codigo);
+				break;
+			case 3:
+				String dnicliente = boo.pedirDNIUsuario();
+				boo.checkOut(dnicliente);
 
-		System.out.println("Hotel Factory");
-		System.out
-				.println("Que operacion desea realizar\n 1. Consultar disponibilidad y Reservar habitacion\n 2. Salir");
-		int opcion = sc.nextInt();
-		switch (opcion) {
-		case 1:
-			consultarHabitaciones();
-			break;
-		case 2:
-			reservarHabitaciones();
-			break;
+				break;
+			case 4:
+				String codigores = boo.obtenerCodigoReserva();
+				boo.cancelarReserva(codigores);
+
+				break;
+			case 5:
+				bandera=false;
+
+				break;
+			}
 		}
+
 	}
 
 	public void consultarHabitaciones() {
