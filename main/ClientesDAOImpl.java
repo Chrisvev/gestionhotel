@@ -11,6 +11,7 @@ public class ClientesDAOImpl implements ClientesDAO {
 	private Session session;
 
 	public ClientesDAOImpl() {
+		
 		Configuration cfg = new Configuration();
 		cfg.configure("hibernate.cfg.xml");
 		SessionFactory factory = cfg.buildSessionFactory();
