@@ -30,7 +30,7 @@ public class BookingService {
 	public LocalDate pedirFechaCliente(String mensaje) {
 
 		Scanner sc = new Scanner(System.in);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		LocalDate fechaHoy = LocalDate.now();
 
 		while (true) {
@@ -63,15 +63,13 @@ public class BookingService {
 
 	}
 
-	public void consultarDisponibilidadHabitaciones(LocalDate fechaInicio, LocalDate fechaFin, int numeroPersonas) {
+	public String consultarDisponibilidadHabitaciones(LocalDate fechaInicio, LocalDate fechaFin, int numeroPersonas) {
 		localizarTipoHabitacion();
 		filtroFechasReserva(fechaInicio, fechaFin);
 		filtrarHabitacionPersonas(numeroPersonas);
 		filtrarEstadoHabitacion();
 
-		System.out.println(normal + " NORMAL (" + Categoria.NORMAL.getPrecioBase() + " €).");
-		System.out.println(business + " BUSINESS (" + Categoria.BUSINESS.getPrecioBase() + " €).");
-		System.out.println(superior + " SUPERIOR (" + Categoria.SUPERIOR.getPrecioBase() + " €).");
+		return "Normal: " + normal + "/nSuperior: " + superior + "/nBusiness: " + business;
 	}
 
 	private void filtroFechasReserva(LocalDate fechaInicio, LocalDate fechaFin) {
@@ -173,15 +171,15 @@ public class BookingService {
 		}
 	}
 
-	public void reservarHabitacionCliente(int tipo, String dni, LocalDate fechaInicio, LocalDate fechaFin) {
+	public String reservarHabitacionCliente(int tipo, String dni, LocalDate fechaInicio, LocalDate fechaFin) {
 		if (tipo < 1 || tipo > 3) {
 			System.err.println("Opcion no valida");
-			return;
+			return "No introducio un numero valido";
 		}
 		Habitaciones habitacion = obtenerHabitacion(tipo);
 		if (habitacion == null) {
 			System.out.println("No hay habitaciones disponibles.");
-			return;
+			return "No hay habitaciones disponibles";
 		}
 		boolean bandera = verificarDNI(dni);
 		if (!bandera) {
@@ -200,10 +198,13 @@ public class BookingService {
 			System.out.println("Reserva realizada");
 			Reservas r = new Reservas(generarCodigoReserva(), null, fechaInicio, fechaFin, cliente);
 			System.out.println("Código de reserva: " + r.getCodigoReserva());
+
 			hotel.agregarReserva(r);
 			habitacion.setCliente(cliente);
 			hotel.hdao.modificar(habitacion);
+			return "Código de reserva: " + r.getCodigoReserva();
 		}
+		return "Hubo un error con la reserva";
 	}
 
 	// Generardos de codigos de barras (Gracias Chat)
@@ -418,7 +419,7 @@ public class BookingService {
 		}
 	}
 
-	public void cancelarReserva(String codigo) {
+	public String cancelarReserva(String codigo) {
 
 		for (Reservas r : hotel.rdao.obtenerTodo()) {
 			if (r.getCodigoReserva().equals(codigo)) {
@@ -432,9 +433,12 @@ public class BookingService {
 					hotel.rdao.eliminar(r);
 					System.out.println("Reserva cancelada xD");
 				}
+				return "La reserva con codigo: " + codigo + "fue cancelada";
+			} else {
+				return "Error";
 			}
 		}
-
+		return "Error al encontrar codigo";
 
 	}
 }
